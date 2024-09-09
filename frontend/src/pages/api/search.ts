@@ -7,7 +7,7 @@ export const GET: APIRoute = async (request) => {
   const trackId = searchParams.get('track')
 
   try {
-    const resp = await fetch(`http://127.0.0.1:5000/track/${trackId}`, {
+    const resp = await fetch(`https://api-alternify.vercel.app/track/${trackId}`, {
       headers: {
         'Content-Type': 'application/json',
       },
