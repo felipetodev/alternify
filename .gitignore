@@ -1,3 +1,8 @@
+.vercel
+*.log
+*.pyc
+__pycache__
+
 # build output
 dist/
 # generated types
@@ -12,10 +17,15 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-
 # environment variables
 .env
 .env.production
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
 # macOS-specific files
 .DS_Store
