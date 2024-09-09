@@ -1,16 +1,33 @@
 ---
-
+import Layout from "../layouts/Layout.astro";
+import Hero from "../components/Hero.astro";
+import Cards from "../components/Cards.astro";
 ---
-
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout
+	title="Alternify"
+	description="Find Alternatives to your Spotify Tracks"
+>
+	<main
+		class="animate-fade-in-up flex flex-col items-center mx-auto max-w-7xl px-8 py-12 md:py-16 lg:px-10"
+	>
+		<div class="flex flex-col text-center gap-4 mb-4 mt-10">
+			<h1 class="text-4xl">Alternify 🎵</h1>
+			<h2 class="opacity-60">Find Alternatives to your Spotify Tracks</h2>
+		</div>
+		<form>
+			<input
+				id="url"
+				name="url"
+				class="border p-2 w-[400px] rounded-xl"
+				type="text"
+				placeholder="Enter a Spotify song link"
+			/>
+			<button
+				class="bg-pink-500 text-white mt-2 rounded-full p-2 transition-opacity hover:opacity-85"
+				>Get Alternatives</button
+			>
+		</form>
+		<Hero />
+		<Cards />
+	</main>
+</Layout>
