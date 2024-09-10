@@ -68,6 +68,7 @@ def get_google_musician_info(query, company_urls):
 
     links_list = [link for link in links_list if 'youtube.com' not in link]
     if youtube_link:
+        urls.append({ "youtube-music": youtube_link.replace("www.youtube.com", "music.youtube.com") })
         urls.append({"youtube": youtube_link})
 
     seen_links = set()
