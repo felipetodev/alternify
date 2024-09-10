@@ -16,7 +16,9 @@ import Footer from "../components/Footer.astro";
 			<h1 class="text-4xl">Alternify 🎵</h1>
 			<h2 class="opacity-60">Find Alternatives to your Spotify Tracks</h2>
 		</div>
-		<form class="flex flex-col sm:flex-row space-y-3.5 sm:space-y-0 items-center justify-center space-x-1 w-full max-w-3xl">
+		<form
+			class="flex flex-col sm:flex-row space-y-3.5 sm:space-y-0 items-center justify-center space-x-1 w-full max-w-3xl"
+		>
 			<input
 				id="url"
 				name="url"
@@ -40,4 +42,12 @@ import Footer from "../components/Footer.astro";
 		<Cards />
 		<Footer />
 	</main>
+	<a
+		class="invisible md:visible border rounded-full py-1 px-4 absolute top-4 right-4 text-xs bg-pink-500/90 text-white font-medium hover:scale-105 transition-transform"
+		rel="noopener noreferrer"
+		target="_blank"
+		href="https://github.com/felipetodev/alternify"
+	>
+		GitHub ✨
+	</a>
 </Layout>
