@@ -3,6 +3,7 @@ import urllib.parse
 import requests
 
 from flask import Flask
+from flask_cors import CORS
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyClientCredentials
 from bs4 import BeautifulSoup
@@ -13,6 +14,7 @@ KG_SEARCH_API_KEY = os.getenv("KG_SEARCH_API_KEY")
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(64)
+CORS(app, resources={r"/*": {"origins": "https://alternify.vercel.app"}})
 
 def get_spotify_info(track_id):
     spotify = Spotify(client_credentials_manager=SpotifyClientCredentials(
