@@ -54,7 +54,11 @@ def get_google_musician_info(query, company_urls):
     links_list = [link for link in links_list if 'imgres?imgurl=' not in link]
 
     # keep first youtube link only, remove other youtube links
-    youtube_link = [link for link in links_list if 'youtube.com' in link][0]
+    youtube_links = [link for link in links_list if 'youtube.com' in link]
+        if youtube_links:
+    youtube_link = youtube_links[0]
+        else:
+        youtube_link = None  # O una respuesta predeterminada
     links_list = [link for link in links_list if 'youtube.com' not in link]
     urls.append({"youtube": youtube_link})
 
