@@ -5,6 +5,7 @@ import requests
 from flask import Flask
 from flask_cors import CORS
 from spotipy import Spotify
+from spotipy.exceptions import SpotifyException
 from spotipy.oauth2 import SpotifyClientCredentials
 from bs4 import BeautifulSoup
 
@@ -23,7 +24,11 @@ def get_spotify_info(track_id):
     ))
 
     track_uri = f"spotify:track:{track_id}"
-    track_data = spotify.track(track_uri)
+    try:
+        track_data = spotify.track(track_uri)
+    except SpotifyException as e:
+        return None
+
     track_url = track_data['external_urls']['spotify']
     track_data.pop('available_markets', None)
     track_data['album'].pop('available_markets', None)
@@ -100,7 +105,14 @@ def home():
 
 @app.route('/track/<id>')
 def track(id):
-    track_query_encoded, song_name, track_url, track_query = get_spotify_info(id)
+    if len(id) != 22:
+        return {"error": "Invalid Track ID"}
+
+    track_info = get_spotify_info(id)
+    if not track_info:
+        return {"data": [], "artist": "Not found", "song": "Not found"}
+
+    track_query_encoded, song_name, track_url, track_query = track_info
 
     print(track_query_encoded, "🔍")
 
