@@ -92,6 +92,8 @@ def get_from_deezer(query, song_name):
         "Content-Type": "application/json"
     }
     response = requests.get(f"{DEEZER_API_URL}?q={query}", headers=headers)
+    if response.status_code != 200:
+        return None
     result = response.json()['data']
     
     for item in result:
