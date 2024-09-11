@@ -1,0 +1,72 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { assets } from "../../utils/constants";
+
+const { search } = Astro.url;
+const { id } = Astro.params;
+
+const urlParams = new URLSearchParams(search);
+const results = urlParams.get("results");
+
+const array = results?.split("&").map((result) => {
+  const [key, value] = result.split("=");
+  return { key, value: decodeURIComponent(value) };
+});
+
+if (!array) {
+  Astro.response.status = 404;
+  Astro.response.statusText = 'Not found';
+}
+---
+<Layout
+  title="Alternify - Share"
+  description={`Found ${id} alternative tracks`}
+>
+  <div class="flex flex-col text-center gap-4 mb-4 mt-10">
+    <a href="/" class="hover:opacity-80 transition-opacity">
+      <h1 class="text-4xl">Alternify - Share 🎵</h1>
+    </a>
+    <h2 class="opacity-60">Find Alternatives to your Spotify Tracks</h2>
+  </div>
+  <h2 class="animate-fade-in-up mt-6 text-sm opacity-70 text-center flex items-center">
+    Results for "{id}"
+  </h2>
+  <section
+    id="results"
+    class="w-full max-w-7xl grid gap-4 grid-cols-[repeat(auto-fill,_minmax(140px,1fr))] sm:grid-cols-[repeat(auto-fill,_minmax(220px,1fr))] mt-20"
+  >
+    {
+      array?.map(({ key: company, value: url }) => {
+        const asset = assets[company as keyof typeof assets];
+        return (
+          <article class="relative animate-fade-in-up flex sm:transition-transform sm:hover:-translate-y-3">
+            <a
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="flex flex-col items-center justify-center size-full border border-neutral-400/50 rounded-3xl p-6 bg-white/45"
+            >
+              {asset ? (
+                company !== "deezer" ? (
+                  <img
+                    src={asset}
+                    alt={company}
+                    class={`w-full block ${company === "amazon" ? "rounded-[30px]" : ""}`}
+                  />
+                ) : (
+                  <img src={asset} alt={company} class="w-full block" />
+                  <img src={asset} alt={company} class="w-full block" />
+                  <img src={asset} alt={company} class="w-full block" />
+                )
+              ) : (
+                <h3 class="uppercase text-xl md:text-3xl font-semibold">
+                  {company}
+                </h3>
+              )}
+            </a>
+          </article>
+        );
+      })
+    }
+  </section>
+</Layout>
