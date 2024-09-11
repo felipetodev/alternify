@@ -64,11 +64,10 @@
       heading.id = "query";
       heading.innerHTML = `Results for "${query}"`;
       results.insertAdjacentElement("beforebegin", heading);
-      // add shareIcon inside h2 as <span>{share}</span>
 
       const shareIcon = document.createElement("button");
       shareIcon.id = "share-playlist";
-      shareIcon.classList.add("text-pink-800", "cursor-pointer", "transition-transform", "hover:-translate-y-1", "ml-2.5", "duration-400");
+      shareIcon.classList.add("bg-pink-500", "rounded-full", "p-1.5", "text-white", "cursor-pointer", "transition-transform", "hover:-translate-y-1", "ml-2.5");
       shareIcon.innerHTML = share;
       heading.appendChild(shareIcon);
     }
