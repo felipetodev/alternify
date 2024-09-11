@@ -63,8 +63,8 @@ python main.py
 
 ```bash
 # Get your client id and secret from https://developer.spotify.com
-SPOTIFY_CLIENT_ID=95f14325758b4e8b915380105eab9073
-SPOTIFY_CLIENT_SECRET=9186250818f8433bbf22e9b17c5e4021
+SPOTIFY_CLIENT_ID=
+SPOTIFY_CLIENT_SECRET=
 ```
 
 ## 🔑 License
