@@ -1,59 +1,56 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import Socials from "../../components/Socials.astro";
-import { assets, servicesAvailable } from "../../lib/constants";
+import { assets } from "../../lib/constants";
 import { db, eq, Share } from "astro:db";
+import {
+  validateShareRequest,
+  validateTrackId
+} from "../../lib/schemas";
 
 let isDB = false;
 const { search } = Astro.url;
 const { id } = Astro.params;
 
-if (!id) {
-  Astro.response.status = 404;
-  Astro.response.statusText = 'Not found';
-}
+const track = validateTrackId(id)
+if (!track.success) return Astro.rewrite("/404")
 
-let artist: string | undefined = ""
-let results: string | undefined = ""
+let urlParams: URLSearchParams = new URLSearchParams(search);
+const validateParams = validateShareRequest(id!, urlParams);
 
-const urlParams = new URLSearchParams(search);
-artist = urlParams.get("artist") ?? undefined;
-results = urlParams.get("results") ?? undefined;
+// if url has no params, but valid id, check db
+if (!validateParams.success) {
+  try {
+    const trackInfo = (await db
+    .select()
+    .from(Share)
+    .where(eq(Share.id, id!)))[0] ?? null;
 
-if (id) {
-  const trackInfo = (await db.select()
-  .from(Share)
-  .where(eq(Share.id, id!)))[0] ?? null;
-
-  if (trackInfo !== null) {
-    isDB = true;
-    const urlParams = new URLSearchParams(trackInfo.url);
-    artist = urlParams.get("artist")!;
-    results = urlParams.get("results")!;
+    if (trackInfo !== null) {
+      isDB = true;
+      urlParams = new URLSearchParams(trackInfo.url);
+    } else {
+      console.error(`[Error]: Track id: ${id} not found in database`);
+      return Astro.rewrite("/404")
+    }
+  } catch {
+    console.error('[Error]: DB failed to fetch track info');
+    return Astro.rewrite("/404")
   }
 }
 
-if (!artist || !results) {
-  Astro.response.status = 404;
-  Astro.response.statusText = 'Not found';
+// validate again to avoid db errors
+const result = validateShareRequest(id!, urlParams);
+if (!result.success) {
+  return Astro.rewrite("/404")
 }
 
-const links = results?.split("&").map((result) => {
+const { artist, results } = result.data;
+
+const links = results.split("&").map((result) => {
   const [key, value] = result.split("=");
-
-  // validate that key in results is a valid music service
-  if (!servicesAvailable.includes(key as any)) {
-    Astro.response.status = 404;
-    Astro.response.statusText = 'Not found';
-  }
-  return { key, value: decodeURIComponent(value) };
-});
-
-if (!isDB && !artist && !results) {
-  console.error("No artist or results found");
-  Astro.response.status = 404;
-  Astro.response.statusText = 'Not found';
-}
+   return { key, value: decodeURIComponent(value) };
+ });
 
 const shareHref = isDB
   ? `${Astro.url.origin}/share/${id}`
@@ -85,7 +82,7 @@ const shareHref = isDB
       links?.map(({ key: company, value: url }) => {
         const asset = assets[company as keyof typeof assets];
         return (
-          <article class="relative animate-fade-in-up flex sm:transition-transform sm:hover:-translate-y-3">
+          <article class="relative aspect-square animate-fade-in-up flex sm:transition-transform sm:hover:-translate-y-3">
             <a
               href={url}
               target="_blank"
