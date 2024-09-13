@@ -63,9 +63,13 @@ export function addSocialMessage(
       }
       window.open(urlWithText, "_blank");
     } else {
-      alert(
-        "We are unable to generate a share links on social media at the moment. Please try again later.",
-      );
+      return window.toast({
+        title: "We are unable to generate a share links on social media at the moment. Please try again later.",
+        location: "bottom-center",
+        dismissible: true,
+        type: "warning",
+        icon: true,
+      });
     }
   });
 }

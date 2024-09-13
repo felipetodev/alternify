@@ -28,21 +28,16 @@
 
     const result = validateInput(url)
     if (result.error) {
-      return alert('Please enter a valid Spotify URL');
+      return window.toast({
+        title: "Please enter a valid Spotify URL",
+        location: "bottom-center",
+        dismissible: true,
+        type: "warning",
+        icon: true,
+      });
     }
 
-    let trackId = "";
-    try {
-      trackId = new URL(url).pathname.split("/").pop() as string;
-    } catch {
-      if (url.length === 22) {
-        trackId = url;
-      } else {
-        alert(`${url} is not a valid Spotify URL`);
-        return;
-      }
-    }
-
+    const trackId = result.data;
     submit.innerHTML = `${spinner} Loading...`;
 
     fetch(`/api/search?track=${trackId}`)

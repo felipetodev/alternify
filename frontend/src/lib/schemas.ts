@@ -6,7 +6,13 @@ const spotifyTrackIdSchema = z.string().length(22);
 const spotifyUrlSchema = z
   .string()
   .regex(/\bhttps?:\/\/[^/]*\bspotify\.com\/track\/([^\s?]+)/)
-  .min(1);
+  .transform((url) => {
+    const match = url.match(/\/track\/([a-zA-Z0-9]{22})/);
+    return match ? match[1] : null;
+  })
+  .refine((value) => {
+    return value !== null;
+  });
 
 const spotifyTrackSchema = z.union([
   spotifyUrlSchema,
