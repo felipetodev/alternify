@@ -16,7 +16,7 @@ export const GET: APIRoute = async (request) => {
   }
 
   try {
-    const resp = await fetch(`${API_HOST}/track/${trackId}`, {
+    const resp = await fetch(`/track/${trackId}`, {
       headers: {
         'Content-Type': 'application/json',
       },
