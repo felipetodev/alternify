@@ -13,7 +13,8 @@ https://github.com/user-attachments/assets/c533eff8-3e5e-4bbd-87e0-6760900aab86
 - [**Vercel**](https://vercel.com/) - Provides the developer tools and cloud infrastructure.
 - [**Flask**](https://flask.palletsprojects.com/) - A lightweight WSGI web application framework.
 - [**Spotify API**](https://developer.spotify.com/documentation/web-api/) - Web API that provides access to Spotify music catalog.
-- [**svgl**](https://svgl.app/) - Beautifully SVG logos.
+- [**Astro DB**](https://astro.build/db/) - fully managed SQL database.
+- [**svgl**](https://svgl.app/) - Beautiful library with SVG logos.
 
 ## 🚀 Quick start (Frontend)
 
@@ -59,12 +60,14 @@ pip install -r requirements.txt
 python main.py
 ```
 
-4. Create a `.env` file in the root of the project and add the following variables:
+4. Create a `.env` file in the root of the project and add the following variables (check the `.env.example` file):
 
 ```bash
 # Get your client id and secret from https://developer.spotify.com
 SPOTIFY_CLIENT_ID=
 SPOTIFY_CLIENT_SECRET=
+# Get your Astro Studio app token from https://studio.astro.build
+ASTRO_STUDIO_APP_TOKEN=
 ```
 
 ## 🔑 License
