@@ -1,9 +1,8 @@
 # Alternify
 
-Find Alternatives to your Spotify Tracks & share them with your friends!
+Find Alternatives to your Spotify Tracks & **share them with your friends!**
 
-
-https://github.com/user-attachments/assets/c533eff8-3e5e-4bbd-87e0-6760900aab86
+https://github.com/user-attachments/assets/9a50901d-3e72-4977-a913-651c92c76fc2
 
 ## 🛠️ Stack
 
