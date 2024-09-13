@@ -1,13 +1,21 @@
+<h2 id="track-heading" class="flex text-center text-sm items-center"></h2>
 <section
   id="results"
   class="w-full max-w-4xl grid gap-4 grid-cols-[repeat(auto-fit,_minmax(140px,1fr))] sm:grid-cols-[repeat(auto-fit,_minmax(220px,1fr))]"
 >
 </section>
 <script>
-  import { assets, spinner, share } from '../utils/constants'
+  import { assets, spinner, socials } from "../lib/constants";
+  import { validateInput } from "../lib/schemas";
+  import {
+    $,
+    $$,
+    createShareUrl,
+    addSocialMessage,
+    addClipboardEvent
+  } from "../lib/utils";
+  import type { TrackLink } from "../lib/types";
 
-  const $ = (el: string) => document.querySelector(el);
-  const $$ = (el: string) => document.querySelectorAll(el);
   const submit = $("button[type=submit] span")!;
 
   const form = $("form")!;
@@ -18,9 +26,9 @@
     const formData = new FormData(form);
     const url = formData.get("url") as string;
 
-    if (!url.trim()) {
-      alert("Please enter a valid Spotify URL");
-      return;
+    const result = validateInput(url)
+    if (result.error) {
+      return alert('Please enter a valid Spotify URL');
     }
 
     let trackId = "";
@@ -34,15 +42,14 @@
         return;
       }
     }
-    // add schema validation
 
     submit.innerHTML = `${spinner} Loading...`;
 
     fetch(`/api/search?track=${trackId}`)
-      .then((res) => res.json())
+      .then((res): Promise<{ data: TrackLink[]; artist: string }> => res.json())
       .then((info) => {
         const { data, artist } = info;
-        addTrackQuery(artist);
+        addTrackInfo(artist);
         addHtmlNodes(data, artist);
       })
       .catch((err) => {
@@ -52,27 +59,26 @@
         submit.innerHTML = "Get Alternatives";
       });
 
-    function addTrackQuery(query: string) {
-      const queryHeading = $("#query");
+    function addTrackInfo(query: string) {
+      const trackHeading = $("#track-heading");
       const results = $("#results")!;
+      const socialsEl = $("#socials")!;
+      socialsEl?.remove();
 
       results.classList.add("py-20");
-      queryHeading?.remove();
 
-      const heading = document.createElement("h2");
-      heading.classList.add("animate-fade-in-up", "mt-6", "text-sm", "opacity-70", "text-center", "flex", "items-center");
-      heading.id = "query";
-      heading.innerHTML = `Results for "${query}"`;
-      results.insertAdjacentElement("beforebegin", heading);
+      trackHeading.classList.add("mt-6", "animate-fade-in-up");
+      trackHeading.innerHTML = `<span class="opacity-70">Results for "${query}"</span>`;
 
-      const shareIcon = document.createElement("button");
+      // add share button clipboard
+      const shareIcon = document.createElement("div");
       shareIcon.id = "share-playlist";
-      shareIcon.classList.add("bg-pink-500", "rounded-full", "p-1.5", "text-white", "cursor-pointer", "transition-transform", "hover:-translate-y-1", "ml-2.5");
-      shareIcon.innerHTML = share;
-      heading.appendChild(shareIcon);
+      shareIcon.classList.add("ml-2.5", "animate-fade-in-up");
+      shareIcon.innerHTML = socials;
+      trackHeading.after(shareIcon);
     }
 
-    function addHtmlNodes(data: { [key: string]: string }[], artist: string) {
+    function addHtmlNodes(data: TrackLink[], artist: string) {
       const hero = $("#hero");
       const results = $("#results")!;
 
@@ -90,9 +96,9 @@
 							rel="noopener noreferrer"
 							class="flex flex-col items-center justify-center size-full border border-neutral-400/50 rounded-3xl p-6 bg-white/45"
 						>
-							${asset ? (company !== "deezer" ? `<img src=${asset} alt=${company} class="w-full block ${company === 'amazon' ? 'rounded-[30px]' : ''}" />` : `<img src=${asset} alt=${company} class="w-full block" />`.repeat(3)) : `<h3 class="uppercase text-xl md:text-3xl font-semibold">${company}</h3>`}
+							${asset ? (company !== "deezer" ? `<img src=${asset} alt=${company} class="w-full block ${company === "amazon" ? "rounded-[30px]" : ""}" />` : `<img src=${asset} alt=${company} class="w-full block" />`.repeat(3)) : `<h3 class="uppercase text-xl md:text-3xl font-semibold">${company}</h3>`}
 						</a>
-            <button id="clipboard" data-clipboard-text=${url} class="hidden sm:flex z-10 absolute top-0 right-0 p-2 transition-opacity hover:opacity-80 text-pink-400 cursor-pointer">
+            <button id="clipboard" data-url=${url} class="hidden sm:flex z-10 absolute top-0 right-0 p-2 transition-opacity hover:opacity-80 text-pink-400 cursor-pointer">
               <svg class="w-4 h-4 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
             </button>
 					</article>
@@ -101,30 +107,29 @@
         .join("");
 
       if (data.length > 0) {
-        const params = new URLSearchParams();
-        data.forEach(source => {
-          const [key, value] = Object.entries(source)[0];
-          params.append(key, value as string);
-        });
+        addClipboardEvent($$("#clipboard")!);
 
-        const encodedArtist = encodeURIComponent(artist);
-        const encodedParams = encodeURIComponent(params.toString());
+        const { shareUrl: _delete, urlEncoded } = createShareUrl(data, artist);
 
-        const url = `${window.origin}/share/${encodedArtist}?results=${encodedParams}`;
+        function addSocialEvents(element: NodeListOf<HTMLElement>) {
+          element.forEach((button) => {
+            button.addEventListener("click", (e) => {
+              const id = button.getAttribute("data-id");
 
-        const sharePlaylist = $("#share-playlist")!;
-        sharePlaylist.addEventListener("click", () => {
-          navigator.clipboard.writeText(url);
-        });
-
-        const clipboard = $$("#clipboard")!;
-        clipboard.forEach((button) => {
-          button.addEventListener("click", (e) => {
-            const target = e.target as HTMLButtonElement;
-            const url = target.getAttribute("data-clipboard-text");
-            navigator.clipboard.writeText(url!);
+              if (id === "copy") {
+                navigator.clipboard.writeText(
+                  `${window.origin}/share/${trackId}${urlEncoded}`,
+                );
+              } else if (id === "whatsapp") {
+                addSocialMessage(id, artist, urlEncoded, trackId);
+              } else if (id === "x") {
+                addSocialMessage(id, artist, urlEncoded, trackId);
+              }
+            });
           });
-        });
+        }
+
+        addSocialEvents($$("#socials button[data-id]")!);
       } else {
         $("#share-playlist")?.remove();
       }
