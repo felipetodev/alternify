@@ -6,7 +6,7 @@ env:
 on:
   push:
     branches:
-      - main
+      - main # '*' for all branches
   pull_request:
     types: [opened, reopened, synchronize]
 
@@ -22,8 +22,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Change to frontend directory
-        run: cd frontend
-      - name: Install dependencies
-        uses: jaid/action-npm-install@v1.2.1
+      - uses: jaid/action-npm-install@v1.2.1
       - uses: withastro/action-studio@main
