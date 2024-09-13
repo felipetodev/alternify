@@ -1,26 +1,65 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { assets } from "../../utils/constants";
+import Socials from "../../components/Socials.astro";
+import { assets } from "../../lib/constants";
+import { db, eq, Share } from "astro:db";
+import {
+  validateShareRequest,
+  validateTrackId
+} from "../../lib/schemas";
 
+let isDB = false;
 const { search } = Astro.url;
 const { id } = Astro.params;
 
-const urlParams = new URLSearchParams(search);
-const results = urlParams.get("results");
+const track = validateTrackId(id)
+if (!track.success) return Astro.rewrite("/404")
 
-const array = results?.split("&").map((result) => {
-  const [key, value] = result.split("=");
-  return { key, value: decodeURIComponent(value) };
-});
+let urlParams: URLSearchParams = new URLSearchParams(search);
+const validateParams = validateShareRequest(id!, urlParams);
 
-if (!array) {
-  Astro.response.status = 404;
-  Astro.response.statusText = 'Not found';
+// if url has no params, but valid id, check db
+if (!validateParams.success) {
+  try {
+    const trackInfo = (await db
+    .select()
+    .from(Share)
+    .where(eq(Share.id, id!)))[0] ?? null;
+
+    if (trackInfo !== null) {
+      isDB = true;
+      urlParams = new URLSearchParams(trackInfo.url);
+    } else {
+      console.error(`[Error]: Track id: ${id} not found in database`);
+      return Astro.rewrite("/404")
+    }
+  } catch {
+    console.error('[Error]: DB failed to fetch track info');
+    return Astro.rewrite("/404")
+  }
 }
+
+// validate again to avoid db errors
+const result = validateShareRequest(id!, urlParams);
+if (!result.success) {
+  return Astro.rewrite("/404")
+}
+
+const { artist, results } = result.data;
+
+const links = results.split("&").map((result) => {
+  const [key, value] = result.split("=");
+   return { key, value: decodeURIComponent(value) };
+ });
+
+const shareHref = isDB
+  ? `${Astro.url.origin}/share/${id}`
+  : `?artist=${encodeURIComponent(artist!)}&results=${encodeURIComponent(results!)}`;
+
 ---
 <Layout
-  title="Alternify - Share"
-  description={`Found ${id} alternative tracks`}
+  title={`Alternify - Share | ${artist}`}
+  description={`Found ${artist} alternative tracks`}
 >
   <div class="flex flex-col text-center gap-4 mb-4 mt-10">
     <a href="/" class="hover:opacity-80 transition-opacity">
@@ -29,17 +68,21 @@ if (!array) {
     <h2 class="opacity-60">Find Alternatives to your Spotify Tracks</h2>
   </div>
   <h2 class="animate-fade-in-up mt-6 text-sm opacity-70 text-center flex items-center">
-    Results for "{id}"
+    Results for "{artist}"
   </h2>
+  <Socials
+    title={artist!}
+    href={shareHref}
+  />
   <section
     id="results"
     class="w-full max-w-4xl grid gap-4 grid-cols-[repeat(auto-fit,_minmax(140px,1fr))] sm:grid-cols-[repeat(auto-fit,_minmax(220px,1fr))] mt-20"
   >
     {
-      array?.map(({ key: company, value: url }) => {
+      links?.map(({ key: company, value: url }) => {
         const asset = assets[company as keyof typeof assets];
         return (
-          <article class="relative animate-fade-in-up flex sm:transition-transform sm:hover:-translate-y-3">
+          <article class="relative aspect-square animate-fade-in-up flex sm:transition-transform sm:hover:-translate-y-3">
             <a
               href={url}
               target="_blank"

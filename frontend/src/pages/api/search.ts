@@ -1,13 +1,22 @@
 import type { APIRoute } from "astro"
+import { API_HOST } from "../../lib/constants"
+import { validateTrackId } from '../../lib/schemas'
 
 export const GET: APIRoute = async (request) => {
   const { url } = request
   const searchParams = new URL(url).searchParams
 
-  const trackId = searchParams.get('track')
+  const trackId = searchParams.get('track') ?? undefined
+
+  const result = validateTrackId(trackId)
+
+  if (!result.success) {
+    console.error(result.error.errors)
+    return new Response('Invalid credentials', { status: 400 })
+  }
 
   try {
-    const resp = await fetch(`https://api-alternify.vercel.app/track/${trackId}`, {
+    const resp = await fetch(`${API_HOST}/track/${trackId}`, {
       headers: {
         'Content-Type': 'application/json',
       },
