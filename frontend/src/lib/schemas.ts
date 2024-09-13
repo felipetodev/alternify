@@ -23,12 +23,11 @@ export function validateInput(url: string) {
   return spotifyTrackSchema.safeParse(url);
 }
 
-export function validateTrackId(id: string | null) {
+export function validateTrackId(id?: string) {
   return spotifyTrackIdSchema.safeParse(id);
 }
 
-const shareSchema = z.object({
-  id: z.string().length(22),
+const paramsSearchSchema = z.object({
   artist: z.string().min(1),
   results: z
     .string()
@@ -47,6 +46,10 @@ const shareSchema = z.object({
       return true;
     }, { message: "🔑" }),
 })
+
+const shareSchema = z.object({
+  id: spotifyTrackIdSchema,
+}).and(paramsSearchSchema);
 
 export function validateShareRequest(id: string, params: URLSearchParams) {
   return shareSchema.safeParse({

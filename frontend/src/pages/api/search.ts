@@ -6,7 +6,7 @@ export const GET: APIRoute = async (request) => {
   const { url } = request
   const searchParams = new URL(url).searchParams
 
-  const trackId = searchParams.get('track')
+  const trackId = searchParams.get('track') ?? undefined
 
   const result = validateTrackId(trackId)
 

@@ -67,7 +67,7 @@ export function addSocialMessage(
         title: "We are unable to generate a share links on social media at the moment. Please try again later.",
         location: "bottom-center",
         dismissible: true,
-        type: "warning",
+        type: "error",
         icon: true,
       });
     }
