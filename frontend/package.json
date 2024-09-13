@@ -9,9 +9,10 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "start": "astro dev",
-    "build": "astro check && astro build --remote",
+    "start": "astro dev  --remote",
+    "build": "astro build --remote",
     "preview": "astro preview",
+    "check": "astro check && tsc --noEmit",
     "astro": "astro"
   },
   "dependencies": {

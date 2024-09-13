@@ -108,7 +108,7 @@
 
         function addSocialEvents(element: NodeListOf<HTMLElement>) {
           element.forEach((button) => {
-            button.addEventListener("click", (e) => {
+            button.addEventListener("click", () => {
               const id = button.getAttribute("data-id");
 
               if (id === "copy") {
