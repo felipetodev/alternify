@@ -84,7 +84,7 @@
           const [company, url] = Object.entries(source)[0];
           const asset = assets[company as keyof typeof assets];
           return `\
-					<article class="relative animate-fade-in-up flex sm:transition-transform sm:hover:-translate-y-3">
+					<article class="relative aspect-square animate-fade-in-up flex sm:transition-transform sm:hover:-translate-y-3">
 						<a
 							href=${url}
 							target="_blank"
@@ -115,6 +115,13 @@
                 navigator.clipboard.writeText(
                   `${window.origin}/share/${trackId}${urlEncoded}`,
                 );
+                window.toast({
+                  title: "Share alternatives!",
+                  location: "bottom-center",
+                  dismissible: true,
+                  type: "success",
+                  icon: true,
+                });
               } else if (id === "whatsapp") {
                 addSocialMessage(id, artist, urlEncoded, trackId);
               } else if (id === "x") {

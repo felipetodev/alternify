@@ -87,6 +87,13 @@ const { title, href } = Astro.props;
 
       if (id === 'copy') {
         navigator.clipboard.writeText(href);
+        window.toast({
+          title: "Share alternatives!",
+          location: "bottom-center",
+          dismissible: true,
+          type: "success",
+          icon: true,
+        });
       } else if (id === 'whatsapp') {
         addSocialMessage(id, title, href, trackId)
       } else if (id === 'x') {

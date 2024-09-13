@@ -149,17 +149,17 @@
 	}
 
 	.butteruptoast.success {
-		background-color: #141800;
-		color: hsl(74, 98%, 48%);
-		border: solid 1px hsl(74, 98%, 48%);
+		@apply bg-green-100;
+		@apply text-green-500;
+		@apply border-emerald-500;
 	}
 
 	.butteruptoast.success .icon svg {
-		fill: hsl(74, 98%, 48%);
+		@apply fill-green-500;
 	}
 
 	.butteruptoast.error .icon svg {
-		fill: hsl(0, 84%, 48%);
+		@apply fill-red-500;
 	}
 
 	.butteruptoast.warning .icon svg {
@@ -171,9 +171,9 @@
 	}
 
 	.butteruptoast.error {
-		background-color: hsl(0, 100%, 5%);
-		color: hsl(0, 84%, 48%);
-		border: solid 1px hsl(0, 84%, 48%);
+		@apply bg-red-100;
+		@apply text-red-500;
+		@apply border-red-500;
 	}
 
 	.butteruptoast.warning {
