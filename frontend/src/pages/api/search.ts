@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro"
-import { API_HOST } from "../../lib/constants"
+import { API_BASE_URL } from "../../lib/constants"
 import { validateTrackId } from '../../lib/schemas'
 
 export const GET: APIRoute = async (request) => {
@@ -16,7 +16,7 @@ export const GET: APIRoute = async (request) => {
   }
 
   try {
-    const resp = await fetch(`/track/${trackId}`, {
+    const resp = await fetch(`${API_BASE_URL}/track/${trackId}`, {
       headers: {
         'Content-Type': 'application/json',
       },

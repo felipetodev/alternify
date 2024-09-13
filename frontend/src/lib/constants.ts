@@ -1,6 +1,4 @@
-export const API_HOST = import.meta.env.DEV
-  ? "http://127.0.0.1:5000"
-  : "https://alternify.vercel.app";
+export const API_BASE_URL = "https://api-alternify.vercel.app"
 
 export const servicesAvailable = [
   "genius",
