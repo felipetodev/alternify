@@ -1,0 +1,40 @@
+---
+import Layout from "../layouts/Layout.astro";
+---
+<Layout
+  title="Alternify"
+  description="Page Not Found - Alternify"
+>
+  <div class="flex flex-col text-center gap-4 mt-10">
+    <h1 class="text-4xl">Alternify 🎵</h1>
+    <h2 class="opacity-60">
+      Find Alternatives to your Spotify Tracks & <span
+        class="block md:inline-flex underline underline-offset-2 font-semibold"
+        >Share with your Friends!</span
+      >
+    </h2>
+  </div>
+  <div class="h-full flex gap-y-3 dm:gap-y-4 flex-col justify-center items-center text-center">
+    <span class="font-bold sm:text-lg text-pink-500 tracking-widest">
+      404
+    </span>
+    <h1 class="text-4xl sm:text-7xl font-bold tracking-wide text-pink-500">
+      Page Not Found
+    </h1>
+    <h2 class="opacity-60 text-sm sm:text-base mb-6">
+      The page you are looking for does not exist. Please check the URL or go
+      back to the homepage {'<3'}.
+    </h2>
+    <a
+      href="/"
+      class="group relative inline-flex min-w-40 h-10 items-center justify-center overflow-hidden rounded-full bg-pink-500 font-medium text-white transition"
+    >
+      <span class="flex px-6 items-center text-nowrap"> Go to Homepage </span>
+      <div
+        class="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]"
+      >
+        <div class="relative h-full w-8 bg-white/20"></div>
+      </div>
+    </a>
+  </div>
+</Layout>
