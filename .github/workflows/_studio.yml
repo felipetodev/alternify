@@ -22,5 +22,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - uses: jaid/action-npm-install@v1.2.1
+      - name: Install dependencies in frontend folder
+        run: |
+          cd frontend
+          npm ci
       - uses: withastro/action-studio@main
