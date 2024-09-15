@@ -27,6 +27,13 @@ export function addClipboardEvent(el: NodeListOf<HTMLElement>) {
       const target = e.target as HTMLButtonElement;
       const url = target.getAttribute("data-url");
       navigator.clipboard.writeText(url!);
+      window.toast({
+        title: "Link copied to clipboard!",
+        location: "bottom-center",
+        dismissible: true,
+        type: "success",
+        icon: true,
+      });
     });
   });
 }
