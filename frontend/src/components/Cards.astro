@@ -91,7 +91,7 @@
 							rel="noopener noreferrer"
 							class="flex flex-col items-center justify-center size-full border border-neutral-400/50 rounded-3xl p-6 bg-white/45"
 						>
-							${asset ? (company !== "deezer" ? `<img src=${asset} alt=${company} class="w-full block ${company === "amazon" ? "rounded-[30px]" : ""}" />` : `<img src=${asset} alt=${company} class="w-full block" />`.repeat(3)) : `<h3 class="uppercase text-xl md:text-3xl font-semibold">${company}</h3>`}
+							${asset ? (company !== "deezer" ? `<img src=${asset} alt=${company} class="w-full block ${(company === "amazon" || company === "genius") ? "rounded-[30px]" : ""}" />` : `<img src=${asset} alt=${company} class="w-full block" />`.repeat(3)) : `<h3 class="uppercase text-xl md:text-3xl font-semibold">${company}</h3>`}
 						</a>
             <button id="clipboard" data-url=${url} class="hidden sm:flex z-10 absolute top-0 right-0 p-2 transition-opacity hover:opacity-80 text-pink-400 cursor-pointer">
               <svg class="w-4 h-4 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
