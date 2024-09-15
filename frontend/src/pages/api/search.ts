@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro"
-import { API_BASE_URL } from "../../lib/constants"
-import { validateTrackId } from '../../lib/schemas'
+import { API_BASE_URL } from "@/lib/constants"
+import { validateTrackId } from '@/lib/schemas'
 
 export const GET: APIRoute = async (request) => {
   const { url } = request

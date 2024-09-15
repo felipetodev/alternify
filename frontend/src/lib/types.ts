@@ -1,7 +1,7 @@
-import type { assets } from "./constants";
+import type { assets } from "@/lib/constants";
 
-export type Company = keyof typeof assets;
+export type Service = keyof typeof assets;
 
 export type TrackLink = {
-  [K in Company]: string;
+  [K in Service]: string;
 };

@@ -1,4 +1,4 @@
-import type { TrackLink } from './types';
+import type { TrackLink } from '@/lib/types';
 
 export const $ = <T extends HTMLElement>(el: string) =>
   document.querySelector(el) as T;

@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { servicesAvailable } from "./constants";
+import { servicesAvailable } from "@/lib/constants";
+import type { Service } from "@/lib/types";
 
 const spotifyTrackIdSchema = z.string().length(22);
 
@@ -38,7 +39,7 @@ const paramsSearchSchema = z.object({
       listOfUrls.forEach((result) => {
         const [key] = result.split("=");
 
-        if (!servicesAvailable.includes(key as any)) {
+        if (!servicesAvailable.includes(key as Service)) {
           return false;
         }
       });

@@ -1,5 +1,5 @@
 // from: https://github.com/dgtlss/butterup/tree/main
-import { $ } from "../lib/utils"
+import { $ } from "@/lib/utils"
 
 interface ToastOptions {
 	title: string

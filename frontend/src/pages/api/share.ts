@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import { db, Share, NOW } from "astro:db";
-import { validateShareRequest } from "../../lib/schemas";
+import { validateShareRequest } from "@/lib/schemas";
 
 export const POST: APIRoute = async ({ request }) => {
   const { id, url } = await request.json()

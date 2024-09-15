@@ -5,16 +5,16 @@
 >
 </section>
 <script>
-  import { assets, spinner, socials } from "../lib/constants";
-  import { validateInput } from "../lib/schemas";
+  import { assets, spinner, socials } from "@/lib/constants";
+  import { validateInput } from "@/lib/schemas";
   import {
     $,
     $$,
     createShareUrl,
     addSocialMessage,
     addClipboardEvent
-  } from "../lib/utils";
-  import type { TrackLink } from "../lib/types";
+  } from "@/lib/utils";
+  import type { TrackLink } from "@/lib/types";
 
   const submit = $("button[type=submit] span")!;
 

@@ -74,7 +74,7 @@ const { title, href } = Astro.props;
   </button>
 </div>
 <script>
-  import { $$, addSocialMessage } from '../lib/utils';
+  import { $$, addSocialMessage } from '@/lib/utils';
   const trackId = window.location.pathname.split("/").at(-1)!
 
   const socials = $$('button[data-id]');
