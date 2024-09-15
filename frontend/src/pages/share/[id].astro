@@ -1,12 +1,13 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import Socials from "../../components/Socials.astro";
-import { assets } from "../../lib/constants";
+import Layout from "@/layouts/Layout.astro";
+import Socials from "@/components/Socials.astro";
+import { assets } from "@/lib/constants";
 import { db, eq, Share } from "astro:db";
 import {
   validateShareRequest,
   validateTrackId
-} from "../../lib/schemas";
+} from "@/lib/schemas";
+import type { Service } from "@/lib/types";
 
 let isDB = false;
 const { search } = Astro.url;
@@ -48,9 +49,9 @@ if (!result.success) {
 const { artist, results } = result.data;
 
 const links = results.split("&").map((result) => {
-  const [key, value] = result.split("=");
-   return { key, value: decodeURIComponent(value) };
- });
+  const [service, url] = result.split("=") as [Service, string]
+   return { service, url: decodeURIComponent(url) }
+ })
 
 const shareHref = isDB
   ? `${Astro.url.origin}/share/${id}`
@@ -79,8 +80,8 @@ const shareHref = isDB
     class="w-full max-w-4xl grid gap-4 grid-cols-[repeat(auto-fit,_minmax(140px,1fr))] sm:grid-cols-[repeat(auto-fit,_minmax(220px,1fr))] mt-20"
   >
     {
-      links?.map(({ key: company, value: url }) => {
-        const asset = assets[company as keyof typeof assets];
+      links.map(({ service, url }) => {
+        const asset = assets[service];
         return (
           <article class="relative aspect-square animate-fade-in-up flex sm:transition-transform sm:hover:-translate-y-3">
             <a
@@ -90,20 +91,23 @@ const shareHref = isDB
               class="flex flex-col items-center justify-center size-full border border-neutral-400/50 rounded-3xl p-6 bg-white/45"
             >
               {asset ? (
-                company !== "deezer" ? (
+                service !== "deezer" ? (
                   <img
                     src={asset}
-                    alt={company}
-                    class={`w-full block ${company === "amazon" ? "rounded-[30px]" : ""}`}
+                    alt={service}
+                    class={[
+                      "w-full block",
+                      (service === "amazon" || service === "genius") ? "rounded-[30px]" : ""
+                    ].join(" ")}
                   />
                 ) : (
-                  <img src={asset} alt={company} class="w-full block" />
-                  <img src={asset} alt={company} class="w-full block" />
-                  <img src={asset} alt={company} class="w-full block" />
+                  <img src={asset} alt={service} class="w-full block" />
+                  <img src={asset} alt={service} class="w-full block" />
+                  <img src={asset} alt={service} class="w-full block" />
                 )
               ) : (
                 <h3 class="uppercase text-xl md:text-3xl font-semibold">
-                  {company}
+                  {service}
                 </h3>
               )}
             </a>

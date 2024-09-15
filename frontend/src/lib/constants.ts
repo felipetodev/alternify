@@ -14,6 +14,7 @@ export const servicesAvailable = [
 ] as const;
 
 export const assets = {
+  genius: "/genius.png",
   youtube: "/youtube.svg",
   'youtube-music': "/youtube-music.svg",
   spotify: "/spotify.svg",
