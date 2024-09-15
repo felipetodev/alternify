@@ -17,6 +17,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(64)
 CORS(app, resources={r"/*": {"origins": "https://alternify.vercel.app"}})
 
+# skip genius urls
+skip_urls = ['/q/producer', '/q/release-date']
+
 def get_spotify_info(track_id):
     spotify = Spotify(client_credentials_manager=SpotifyClientCredentials(
         client_id=SPOTIFY_CLIENT_ID,
@@ -73,6 +76,8 @@ def get_google_musician_info(query, company_urls):
 
     seen_links = set()
     for link in links_list:
+        if any(url in link for url in skip_urls):
+            continue
         for company, url in company_urls.items():
             if url in link and link not in seen_links:
                 urls.append({company: link})
