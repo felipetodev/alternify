@@ -1,6 +1,7 @@
 import os
 import urllib.parse
 import requests
+import base64
 
 from flask import Flask
 from flask_cors import CORS
@@ -12,6 +13,8 @@ from bs4 import BeautifulSoup
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 KG_SEARCH_API_KEY = os.getenv("KG_SEARCH_API_KEY")
+TIDAL_CLIENT_ID = os.getenv("TIDAL_CLIENT_ID")
+TIDAL_CLIENT_SECRET = os.getenv("TIDAL_CLIENT_SECRET")
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(64)
@@ -106,6 +109,46 @@ def get_from_deezer(query, song_name):
         if item['title'] == song_name:
             return item['link']
 
+def get_from_tidal(query, song_name):
+    TIDAL_OAUTH_URL = "https://auth.tidal.com/v1/oauth2/token"
+    TIDAL_API_URL = "https://openapi.tidal.com/v2"
+    # Encode credentials to Base64
+    credentials = f"{TIDAL_CLIENT_ID}:{TIDAL_CLIENT_SECRET}"
+    b64_credentials = base64.b64encode(credentials.encode()).decode()
+
+    oauth_headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+        # base64 encoded client_id:client_secret
+        "Authorization": f"Basic {b64_credentials}"
+    }
+    data = {
+        "grant_type": "client_credentials"
+    }
+    response = requests.post(TIDAL_OAUTH_URL, headers=oauth_headers, data=data)
+    if response.status_code == 200:
+        token_data = response.json()
+        access_token = token_data['access_token']
+    else:
+        return None
+
+    if access_token:
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {access_token}"
+        }
+
+        response = requests.get(f"{TIDAL_API_URL}/searchresults/{query}/relationships/tracks?countryCode=US&include=tracks", headers=headers)
+        if response.status_code != 200:
+            return None
+        result = response.json()
+
+        track_url = None
+        for track in result['included']:
+            if track['attributes']['title'] == song_name:
+                track_url = track['attributes']['externalLinks'][0]['href']
+                track_url = f"https://listen.tidal.com/track/{track_url.split('/')[-1]}"
+                break
+        return track_url
 
 @app.route('/')
 def home():
@@ -127,7 +170,7 @@ def track(id):
     company_urls = {
         "genius": "genius.com",
         "youtube": "youtube.com",
-        "deezer": "deezer.com",
+        # "deezer": "deezer.com",
         "amazon": "music.amazon",
         "apple": "music.apple",
         "musixmatch": "musixmatch.com",
@@ -142,10 +185,11 @@ def track(id):
         musician_result.append({"deezer": deezer_result})
     musician_result.append({"spotify": track_url})
 
+    tidal_result = get_from_tidal(track_query_encoded, song_name)
+    if tidal_result:
+        musician_result.append({"tidal": tidal_result})
 
-    # return { data: [], artist: "", song: "" } 
-
-    return {"data": musician_result, "song": song_name, "artist": track_query }
+    return {"data": musician_result, "song": song_name, "artist": track_query}
 
 if __name__ == '__main__':
     app.run(debug=True)
