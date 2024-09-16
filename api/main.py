@@ -143,12 +143,15 @@ def get_from_tidal(query, song_name):
         result = response.json()
 
         track_url = None
-        for track in result['included']:
-            if track['attributes']['title'] == song_name:
-                track_url = track['attributes']['externalLinks'][0]['href']
-                track_url = f"https://listen.tidal.com/track/{track_url.split('/')[-1]}"
-                break
-        return track_url
+        try:
+            for track in result['included']:
+                if track['attributes']['title'] == song_name:
+                    track_url = track['attributes']['externalLinks'][0]['href']
+                    track_url = f"https://listen.tidal.com/track/{track_url.split('/')[-1]}"
+                    break
+            return track_url
+        except KeyError:
+            return None
 
 @app.route('/')
 def home():
