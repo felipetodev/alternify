@@ -1,4 +1,6 @@
-export const API_BASE_URL = "https://api-alternify.vercel.app"
+export const API_BASE_URL = import.meta.env.DEV
+  ? "http://127.0.0.1:5000"
+  : "https://api-alternify.vercel.app"
 
 export const servicesAvailable = [
   "genius",
@@ -11,6 +13,7 @@ export const servicesAvailable = [
   "letras",
   "soundcloud",
   "spotify",
+  "tidal"
 ] as const;
 
 export const assets = {
@@ -23,6 +26,7 @@ export const assets = {
   soundcloud: "/soundcloud.svg",
   musixmatch: "/musixmatch.png",
   amazon: "/amazon-music.png",
+  tidal: "/tidal.svg",
 } as const;
 
 export const spinner = `\
