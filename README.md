@@ -65,6 +65,9 @@ python main.py
 # Get your client id and secret from https://developer.spotify.com
 SPOTIFY_CLIENT_ID=
 SPOTIFY_CLIENT_SECRET=
+# Get your client id and secret from https://developer.tidal.com
+TIDAL_CLIENT_ID=
+TIDAL_CLIENT_SECRET=
 # Get your Astro Studio app token from https://studio.astro.build
 ASTRO_STUDIO_APP_TOKEN=
 ```
