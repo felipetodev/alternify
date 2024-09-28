@@ -11,7 +11,7 @@
     $,
     $$,
     createShareUrl,
-    addSocialMessage,
+    createSocialsUrl,
     addClipboardEvent
   } from "@/lib/utils";
   import type { TrackLink } from "@/lib/types";
@@ -41,11 +41,11 @@
     submit.innerHTML = `${spinner} Loading...`;
 
     fetch(`/api/search?track=${trackId}`)
-      .then((res): Promise<{ data: TrackLink[]; artist: string }> => res.json())
+      .then((res): Promise<{ data: TrackLink[]; artist: string, image: string }> => res.json())
       .then((info) => {
-        const { data, artist } = info;
+        const { data, artist, image } = info;
         addTrackInfo(artist);
-        addHtmlNodes(data, artist);
+        addHtmlNodes({ data, artist, image });
       })
       .catch((err) => {
         console.error(err);
@@ -73,7 +73,15 @@
       trackHeading.after(shareIcon);
     }
 
-    function addHtmlNodes(data: TrackLink[], artist: string) {
+    function addHtmlNodes({
+      data,
+      artist,
+      image,
+    }: {
+      data: TrackLink[];
+      artist: string;
+      image: string;
+    }) {
       const hero = $("#hero");
       const results = $("#results")!;
 
@@ -104,7 +112,7 @@
       if (data.length > 0) {
         addClipboardEvent($$("#clipboard")!);
 
-        const { shareUrl: _delete, urlEncoded } = createShareUrl(data, artist);
+        const urlEncoded = createShareUrl(data, artist, image);
 
         function addSocialEvents(element: NodeListOf<HTMLElement>) {
           element.forEach((button) => {
@@ -112,9 +120,7 @@
               const id = button.getAttribute("data-id");
 
               if (id === "copy") {
-                navigator.clipboard.writeText(
-                  `${window.origin}/share/${trackId}${urlEncoded}`,
-                );
+                createSocialsUrl({ id, artist, image, urlEncoded, trackId });
                 window.toast({
                   title: "Share alternatives!",
                   location: "bottom-center",
@@ -123,9 +129,9 @@
                   icon: true,
                 });
               } else if (id === "whatsapp") {
-                addSocialMessage(id, artist, urlEncoded, trackId);
+                createSocialsUrl({ id, artist, image, urlEncoded, trackId });
               } else if (id === "x") {
-                addSocialMessage(id, artist, urlEncoded, trackId);
+                createSocialsUrl({ id, artist, image, urlEncoded, trackId });
               }
             });
           });

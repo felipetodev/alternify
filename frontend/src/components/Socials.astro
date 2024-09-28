@@ -74,31 +74,29 @@ const { title, href } = Astro.props;
   </button>
 </div>
 <script>
-  import { $$, addSocialMessage } from '@/lib/utils';
-  const trackId = window.location.pathname.split("/").at(-1)!
+  import { $$, sharePost } from "@/lib/utils";
+  const trackId = window.location.pathname.split("/").at(-1)!;
 
-  const socials = $$('button[data-id]');
-  socials.forEach(social => {
-    social.addEventListener('click', (e) => {
-      e.preventDefault()
-      const id = social.getAttribute('data-id') as 'copy' | 'whatsapp' | 'x';
-      const href = social.getAttribute('data-url') as string;
-      const title = social.getAttribute('data-title') as string;
+  const socials = $$("button[data-id]");
+  socials.forEach((social) => {
+    social.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = social.getAttribute("data-id") as "copy" | "whatsapp" | "x";
+      const href = social.getAttribute("data-url") as string;
+      const title = social.getAttribute("data-title") as string;
 
-      if (id === 'copy') {
+      if (id === "copy") {
         navigator.clipboard.writeText(href);
-        window.toast({
+        return window.toast({
           title: "Share alternatives!",
           location: "bottom-center",
           dismissible: true,
           type: "success",
           icon: true,
         });
-      } else if (id === 'whatsapp') {
-        addSocialMessage(id, title, href, trackId)
-      } else if (id === 'x') {
-        addSocialMessage(id, title, href, trackId)
       }
+
+      sharePost({ artist: title, trackId, type: id });
     });
-  })
+  });
 </script>

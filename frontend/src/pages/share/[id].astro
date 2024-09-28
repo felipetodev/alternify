@@ -9,58 +9,49 @@ import {
 } from "@/lib/schemas";
 import type { Service } from "@/lib/types";
 
-let isDB = false;
-const { search } = Astro.url;
+// let isDB = false;
+let urlParams: URLSearchParams = new URLSearchParams();
 const { id } = Astro.params;
 
 const track = validateTrackId(id)
 if (!track.success) return Astro.rewrite("/404")
 
-let urlParams: URLSearchParams = new URLSearchParams(search);
-const validateParams = validateShareRequest(id!, urlParams);
-
-// if url has no params, but valid id, check db
-if (!validateParams.success) {
-  try {
-    const trackInfo = (await db
+try {
+  const trackInfo = (await db
     .select()
     .from(Share)
     .where(eq(Share.id, id!)))[0] ?? null;
 
-    if (trackInfo !== null) {
-      isDB = true;
-      urlParams = new URLSearchParams(trackInfo.url);
-    } else {
-      console.error(`[Error]: Track id: ${id} not found in database`);
-      return Astro.rewrite("/404")
-    }
-  } catch {
-    console.error('[Error]: DB failed to fetch track info');
+  if (trackInfo !== null) {
+    // isDB = true;
+    urlParams = new URLSearchParams(trackInfo.url);
+  } else {
+    console.error(`[Error]: Track id: ${id} not found in database`);
     return Astro.rewrite("/404")
   }
+} catch {
+  console.error('[Error]: DB failed to fetch track info');
+  return Astro.rewrite("/404")
 }
 
-// validate again to avoid db errors
 const result = validateShareRequest(id!, urlParams);
 if (!result.success) {
   return Astro.rewrite("/404")
 }
 
-const { artist, results } = result.data;
+const { artist, results, image } = result.data;
 
 const links = results.split("&").map((result) => {
   const [service, url] = result.split("=") as [Service, string]
    return { service, url: decodeURIComponent(url) }
  })
 
-const shareHref = isDB
-  ? `${Astro.url.origin}/share/${id}`
-  : `?artist=${encodeURIComponent(artist!)}&results=${encodeURIComponent(results!)}`;
-
+const shareHref = `${Astro.url.origin}/share/${id}`
 ---
 <Layout
   title={`Alternify - Share | ${artist}`}
   description={`Found ${artist} alternative tracks`}
+  image={image}
 >
   <div class="flex flex-col text-center gap-4 mb-4 mt-10">
     <a href="/" class="hover:opacity-80 transition-opacity">
