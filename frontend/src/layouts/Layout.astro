@@ -1,4 +1,8 @@
 ---
+import "@fontsource/geist-sans";
+import "@fontsource/geist-sans/500.css";
+import "@fontsource/geist-sans/600.css";
+import "@fontsource/geist-sans/700.css";
 import Toast from "@/components/ui/Toast.astro";
 import Footer from "@/components/Footer.astro";
 
@@ -53,21 +57,13 @@ const { title, description, image } = Astro.props;
     >
       <slot />
       <Footer />
-      <a
-        class="invisible md:visible border rounded-full py-1 px-4 absolute top-4 right-6 text-xs bg-pink-500/90 text-white font-medium hover:scale-105 transition-transform"
-        rel="noopener noreferrer"
-        target="_blank"
-        href="https://github.com/felipetodev/alternify"
-      >
-        GitHub ✨
-      </a>
     </main>
     <Toast />
   </body>
 </html>
 <style is:global>
   html {
-    font-family: system-ui, sans-serif;
+    font-family: "Geist Sans", system-ui, sans-serif;
     overflow-x: hidden;
     height: 100%;
   }
