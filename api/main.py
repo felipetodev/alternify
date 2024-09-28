@@ -42,13 +42,13 @@ def get_spotify_info(track_id):
     # map result['artists'] and return names separated by comma
     artists_in_track = ', '.join([artist['name'] for artist in track_data['artists']])
     song_name = track_data['name']
+    track_image = track_data['album']['images'][0]['url']
     track_query = f"{artists_in_track} - {song_name}"
 
     # encode the query string
     track_query_encoded = urllib.parse.quote(track_query)
 
-    return track_query_encoded, song_name, track_url, track_query
-
+    return track_query_encoded, song_name, track_url, track_query, track_image
 
 def get_google_musician_info(query, company_urls):
     urls = []
@@ -166,7 +166,7 @@ def track(id):
     if not track_info:
         return {"data": [], "artist": "Not found", "song": "Not found"}
 
-    track_query_encoded, song_name, track_url, track_query = track_info
+    track_query_encoded, song_name, track_url, track_query, track_image = track_info
 
     print(track_query_encoded, "🔍")
 
@@ -192,7 +192,7 @@ def track(id):
     if tidal_result:
         musician_result.append({"tidal": tidal_result})
 
-    return {"data": musician_result, "song": song_name, "artist": track_query}
+    return {"data": musician_result, "song": song_name, "artist": track_query, "image": track_image}
 
 if __name__ == '__main__':
     app.run(debug=True)
