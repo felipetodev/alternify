@@ -3,7 +3,7 @@ import { db, Share, NOW } from "astro:db";
 import { validateShareRequest } from "@/lib/schemas";
 
 export const POST: APIRoute = async ({ request }) => {
-  const { id, url } = await request.json()
+  const { id, url, image = '' } = await request.json()
 
   const params = new URLSearchParams(url)
   const result = validateShareRequest(id, params)
@@ -17,6 +17,7 @@ export const POST: APIRoute = async ({ request }) => {
     await db.insert(Share).values({
       id: id,
       url: url,
+      image: image,
       createdAt: NOW
     }).onConflictDoNothing()
 

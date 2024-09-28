@@ -46,6 +46,7 @@ const paramsSearchSchema = z.object({
 
       return true;
     }, { message: "🔑" }),
+  image: z.string().url(),
 })
 
 const shareSchema = z.object({
@@ -56,6 +57,7 @@ export function validateShareRequest(id: string, params: URLSearchParams) {
   return shareSchema.safeParse({
     id,
     artist: params.get('artist'),
-    results: params.get('results')
+    results: params.get('results'),
+    image: params.get('image')
   })
 }
