@@ -53,14 +53,13 @@ const shareHref = `${Astro.url.origin}/share/${id}`
   description={`Found ${artist} alternative tracks`}
   image={image}
 >
-  <div class="flex flex-col text-center gap-4 mb-4 mt-10">
+  <div class="flex flex-col text-center gap-4 mb-8 mt-10">
     <a href="/" class="hover:opacity-80 transition-opacity">
-      <h1 class="text-4xl">Alternify - Share 🎵</h1>
+      <h1 class="text-4xl font-medium">Alternify - Share 🎵</h1>
     </a>
-    <h2 class="opacity-60">Find Alternatives to your Spotify Tracks</h2>
   </div>
   <h2 class="animate-fade-in-up mt-6 text-sm opacity-70 text-center flex items-center">
-    Results for "{artist}"
+    Results for "<span class="font-semibold">{artist}</span>"
   </h2>
   <Socials
     title={artist!}
