@@ -38,7 +38,7 @@
     }
 
     const trackId = result.data;
-    submit.innerHTML = `${spinner} Loading...`;
+    submit.innerHTML = `<span class="flex px-4 items-center">${spinner} Loading...</span>`;
 
     fetch(`/api/search?track=${trackId}`)
       .then((res): Promise<{ data: TrackLink[]; artist: string, image: string }> => res.json())
