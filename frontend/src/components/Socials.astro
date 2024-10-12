@@ -88,8 +88,8 @@ const { title, href } = Astro.props;
       if (id === "copy") {
         navigator.clipboard.writeText(href);
         return window.toast({
-          title: "Share alternatives!",
-          location: "bottom-center",
+          title: "Copy alternatives to clipboard!",
+          location: "top-center",
           dismissible: true,
           type: "success",
           icon: true,
