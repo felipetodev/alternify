@@ -25,13 +25,7 @@ export function addClipboardEvent(el: NodeListOf<HTMLElement>) {
       const target = e.target as HTMLButtonElement;
       const url = target.getAttribute("data-url");
       navigator.clipboard.writeText(url!);
-      window.toast({
-        title: "Link copied to clipboard!",
-        location: "bottom-center",
-        dismissible: true,
-        type: "success",
-        icon: true,
-      });
+      toast.success("Song link copied to clipboard!");
     });
   });
 }
@@ -104,4 +98,36 @@ export function sharePost({ artist, trackId, type }: { artist: string, trackId: 
   }
 
   window.open(urlWithText, "_blank");
+}
+
+export class toast {
+  static options = {
+    location: "top-center",
+    dismissible: true,
+    icon: true,
+  };
+
+  static success(title: string) {
+    window.toast({
+      ...this.options,
+      title,
+      type: "success",
+    });
+  }
+
+  static error(title: string) {
+    window.toast({
+      ...this.options,
+      title,
+      type: "error",
+    });
+  }
+
+  static warning(title: string) {
+    window.toast({
+      ...this.options,
+      title,
+      type: "warning",
+    });
+  }
 }

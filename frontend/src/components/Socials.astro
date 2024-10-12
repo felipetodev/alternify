@@ -7,15 +7,15 @@ interface Props {
 const { title, href } = Astro.props;
 ---
 
-<div id="socials" class="flex space-x-3 h-[50px] mt-3">
+<div id="socials" class="animate-fade-in-up flex space-x-3 h-[50px] mt-4">
   <button
-    class="flex items-center bg-pink-500 text-white rounded-full px-2 h-7 group"
+    class="flex items-center bg-pink-500 text-white rounded-full px-2.5 h-10 group"
     aria-label="Copy Link"
     data-url={href}
     data-id="copy"
   >
     <svg
-      class="size-3 group-hover:scale-110 transition-transform"
+      class="size-5 group-hover:scale-110 transition-transform"
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
@@ -26,20 +26,19 @@ const { title, href } = Astro.props;
       stroke-linecap="round"
       stroke-linejoin="round"
     >
-      <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-      <polyline points="16 6 12 2 8 6"></polyline>
-      <line x1="12" x2="12" y1="2" y2="15"></line>
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
     </svg>
   </button>
   <button
-    class="flex items-center bg-[#01e676] text-white rounded-full px-1.5 h-7 group overflow-hidden"
+    class="flex items-center bg-[#01e676] text-white rounded-full px-2.5 h-10 group overflow-hidden"
     aria-label="Share on WhatsApp"
     data-title={title}
     data-url={href}
     data-id="whatsapp"
   >
     <svg
-      class="size-4 group-hover:scale-110 transition-transform"
+      class="size-5 group-hover:scale-110 transition-transform"
       viewBox="0 0 256 259"
       width="256"
       height="259"
@@ -53,14 +52,14 @@ const { title, href } = Astro.props;
     </svg>
   </button>
   <button
-    class="flex items-center bg-black text-white rounded-full px-2 h-7 group"
+    class="flex items-center bg-black text-white rounded-full px-3 h-10 group"
     aria-label="Share on X"
     data-title={title}
     data-url={href}
     data-id="x"
   >
     <svg
-      class="size-3 group-hover:scale-110 transition-transform"
+      class="size-4 group-hover:scale-110 transition-transform"
       xmlns="http://www.w3.org/2000/svg"
       width="1200"
       height="1227"
@@ -74,7 +73,7 @@ const { title, href } = Astro.props;
   </button>
 </div>
 <script>
-  import { $$, sharePost } from "@/lib/utils";
+  import { $$, sharePost, toast } from "@/lib/utils";
   const trackId = window.location.pathname.split("/").at(-1)!;
 
   const socials = $$("button[data-id]");
@@ -87,13 +86,7 @@ const { title, href } = Astro.props;
 
       if (id === "copy") {
         navigator.clipboard.writeText(href);
-        return window.toast({
-          title: "Copy alternatives to clipboard!",
-          location: "top-center",
-          dismissible: true,
-          type: "success",
-          icon: true,
-        });
+        return toast.success("Copy alternatives to clipboard!");
       }
 
       sharePost({ artist: title, trackId, type: id });

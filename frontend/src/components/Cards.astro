@@ -1,7 +1,7 @@
 <h2 id="track-heading" class="flex text-center text-sm items-center"></h2>
 <section
   id="results"
-  class="w-full max-w-4xl grid gap-4 grid-cols-[repeat(auto-fit,_minmax(140px,1fr))] sm:grid-cols-[repeat(auto-fit,_minmax(220px,1fr))]"
+  class="w-full max-w-4xl grid gap-6 grid-cols-[repeat(auto-fit,_minmax(140px,1fr))] sm:grid-cols-[repeat(auto-fit,_minmax(220px,1fr))]"
 >
 </section>
 <script>
@@ -12,7 +12,8 @@
     $$,
     createShareUrl,
     createSocialsUrl,
-    addClipboardEvent
+    addClipboardEvent,
+    toast,
   } from "@/lib/utils";
   import type { TrackLink } from "@/lib/types";
 
@@ -28,13 +29,7 @@
 
     const result = validateInput(url)
     if (result.error) {
-      return window.toast({
-        title: "Please enter a valid Spotify URL",
-        location: "bottom-center",
-        dismissible: true,
-        type: "warning",
-        icon: true,
-      });
+      return toast.error("Please enter a valid Spotify URL");
     }
 
     const trackId = result.data;
@@ -62,7 +57,7 @@
 
       results.classList.add("py-20");
 
-      trackHeading.classList.add("mt-6", "animate-fade-in-up");
+      trackHeading.classList.add("mt-16", "animate-fade-in-up");
       trackHeading.innerHTML = `<span class="opacity-70">Results for "<span class="font-semibold">${query}</span>"`;
 
       // add share button clipboard
@@ -97,12 +92,12 @@
 							href=${url}
 							target="_blank"
 							rel="noopener noreferrer"
-							class="flex flex-col items-center justify-center size-full border border-neutral-400/50 rounded-3xl p-6 bg-white/45"
+							class="flex flex-col items-center justify-center size-full border border-neutral-400/50 rounded-3xl p-6 bg-white/80"
 						>
 							${asset ? (company !== "deezer" ? `<img src=${asset} alt=${company} class="w-full block ${(company === "amazon" || company === "genius") ? "rounded-[30px]" : ""}" />` : `<img src=${asset} alt=${company} class="w-full block" />`.repeat(3)) : `<h3 class="uppercase text-xl md:text-3xl font-semibold">${company}</h3>`}
 						</a>
-            <button id="clipboard" data-url=${url} class="hidden sm:flex z-10 absolute top-0 right-0 p-2 transition-opacity hover:opacity-80 text-pink-400 cursor-pointer">
-              <svg class="w-4 h-4 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+            <button id="clipboard" data-url=${url} class="hidden sm:flex z-10 absolute top-0 right-0 p-4 transition-opacity hover:text-pink-400 text-neutral-400 cursor-pointer transition-colors">
+              <svg class="size-5 pointer-events-none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
             </button>
 					</article>
 				`;
@@ -121,13 +116,7 @@
 
               if (id === "copy") {
                 createSocialsUrl({ id, artist, image, urlEncoded, trackId });
-                window.toast({
-                  title: "Copy alternatives to clipboard!",
-                  location: "top-center",
-                  dismissible: true,
-                  type: "success",
-                  icon: true,
-                });
+                toast.success("Copy alternatives to clipboard!");
               } else if (id === "whatsapp") {
                 createSocialsUrl({ id, artist, image, urlEncoded, trackId });
               } else if (id === "x") {
