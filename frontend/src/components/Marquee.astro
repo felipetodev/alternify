@@ -1,8 +1,11 @@
 ---
-import { Share } from "astro:db";
-import { db } from "astro:db";
+import { Share, db, desc } from "astro:db";
 
-const tracks = (await db.select().from(Share).all()) ?? null;
+const tracks = await db
+  .select()
+  .from(Share)
+  .orderBy(desc(Share.createdAt))
+  .limit(10);
 
 const getArtist = (url: string) => {
   return new URLSearchParams(url).get("artist");
@@ -11,12 +14,15 @@ const getArtist = (url: string) => {
 const { pathname } = Astro.url;
 ---
 {
-  (pathname === "/" && tracks) && (
+  pathname === "/" && tracks && (
     <section id="marquee" class="mb-10 md:mt-14 w-full">
-      <h2 class="text-center text-sm text-pink-500 font-semibold opacity-70 text-pretty">
+      <h2 class="text-center text-sm text-pink-500 font-semibold opacity-70 text-pretty px-8">
         Join the vibe! Check out recent tracks shared by users!
       </h2>
-      <div id="tracks-marquee" class="group relative overflow-hidden whitespace-nowrap py-10 md:[mask-image:_linear-gradient(to_right,_transparent_0,_white_128px,white_calc(100%-128px),_transparent_100%)]">
+      <div
+        id="tracks-marquee"
+        class="group relative overflow-hidden whitespace-nowrap py-10 md:[mask-image:_linear-gradient(to_right,_transparent_0,_white_128px,white_calc(100%-128px),_transparent_100%)]"
+      >
         <div class="animate-slide-left-infinite group-hover:animation-pause inline-block w-max">
           {tracks.map((track) => (
             <a
