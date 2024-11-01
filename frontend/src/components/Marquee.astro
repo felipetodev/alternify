@@ -1,0 +1,46 @@
+---
+import { Share } from "astro:db";
+import { db } from "astro:db";
+
+const tracks = (await db.select().from(Share).all()) ?? null;
+
+const getArtist = (url: string) => {
+  return new URLSearchParams(url).get("artist");
+};
+
+const { pathname } = Astro.url;
+---
+{
+  (pathname === "/" && tracks) && (
+    <section id="marquee" class="mb-10 md:mt-14 w-full">
+      <h2 class="text-center text-sm text-pink-500 font-semibold opacity-70 text-pretty">
+        Join the vibe! Check out recent tracks shared by users!
+      </h2>
+      <div id="tracks-marquee" class="group relative overflow-hidden whitespace-nowrap py-10 md:[mask-image:_linear-gradient(to_right,_transparent_0,_white_128px,white_calc(100%-128px),_transparent_100%)]">
+        <div class="animate-slide-left-infinite group-hover:animation-pause inline-block w-max">
+          {tracks.map((track) => (
+            <a
+              href={`/share/${track.id}`}
+              class="relative inline-block overflow-hidden group hover:-skew-x-6 group mx-3 transform transition-transform duration-300 hover:scale-150"
+            >
+              <img
+                loading="lazy"
+                class="aspect-square size-28 sm:size-40 md:size-52"
+                src={track.image}
+                alt={getArtist(track.url)}
+              />
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+<script>
+  // duplicate the marquee
+  const tracks = document.getElementById("tracks-marquee");
+
+  if (tracks) {
+    tracks.innerHTML += tracks.innerHTML;
+  }
+</script>

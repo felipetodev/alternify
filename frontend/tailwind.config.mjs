@@ -13,10 +13,15 @@ export default {
             "opacity": "1",
             "transform": "translateY(0)"
           }
-        }
+        },
+        'slide-left': {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-100%)' },
+        },
       },
       animation: {
-        "fade-in-up": "fade-in-up 0.6s ease-in-out"
+        "fade-in-up": "fade-in-up 0.6s ease-in-out",
+        'slide-left-infinite': 'slide-left 30s linear infinite',
       },
 		},
 	},

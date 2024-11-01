@@ -5,6 +5,7 @@ import "@fontsource/geist-sans/600.css";
 import "@fontsource/geist-sans/700.css";
 import Toast from "@/components/ui/Toast.astro";
 import Footer from "@/components/Footer.astro";
+import Marquee from "@/components/Marquee.astro";
 
 interface Props {
   title: string;
@@ -18,9 +19,10 @@ const { title, description, image } = Astro.props;
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="canonical" href="https://alternify.vercel.app" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
     <link rel="canonical" href="https://alternify.vercel.app" />
     <meta name="generator" content={Astro.generator} />
     <meta name="twitter:card" content="summary_large_image" />
@@ -53,9 +55,10 @@ const { title, description, image } = Astro.props;
       </div>
     </div>
     <main
-      class="animate-fade-in-up w-screen h-screen overflow-y-auto flex flex-col items-center mx-auto px-8 py-12 md:py-16 lg:px-10"
+      class="animate-fade-in-up w-screen h-screen overflow-y-auto flex flex-col items-center mx-auto"
     >
       <slot />
+      <Marquee />
       <Footer />
     </main>
     <Toast />
