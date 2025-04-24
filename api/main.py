@@ -15,13 +15,11 @@ KG_SEARCH_API_KEY = os.getenv("KG_SEARCH_API_KEY")
 TIDAL_CLIENT_ID = os.getenv("TIDAL_CLIENT_ID")
 TIDAL_CLIENT_SECRET = os.getenv("TIDAL_CLIENT_SECRET")
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+GENIUS_ACCESS_TOKEN = os.getenv("GENIUS_ACCESS_TOKEN")
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(64)
 CORS(app, resources={r"/*": {"origins": "https://alternify.vercel.app"}})
-
-# skip genius urls
-skip_urls = ['/q/producer', '/q/release-date']
 
 def get_spotify_info(track_id):
     spotify = Spotify(client_credentials_manager=SpotifyClientCredentials(
@@ -64,6 +62,22 @@ def get_youtube_url(query):
     for item in result:
         video_id = item['id']['videoId']
         return f"https://www.youtube.com/watch?v={video_id}"
+
+def get_genius_url(query, song_name):
+    genius_api_url = "https://api.genius.com/search"
+    headers = {
+        "Authorization": f"Bearer {GENIUS_ACCESS_TOKEN}",
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    }
+    response = requests.get(f"{genius_api_url}?q={query}", headers=headers)
+    if response.status_code != 200:
+        return None
+    results = response.json()
+    for hit in results['response']['hits']:
+        if hit['result']['title'] == song_name:
+            song_url = hit['result']['url']
+            return song_url
 
 def get_deezer_url(query, song_name):
     deezer_api_url = "https://api.deezer.com/search"
@@ -148,6 +162,10 @@ def track(id):
         musician_result.append({"youtube": youtube_result})
         yt_music_url = youtube_result.replace("www.youtube.com", "music.youtube.com")
         musician_result.append({"youtube-music": yt_music_url})
+
+    genius_result = get_genius_url(track_query_encoded, song_name)
+    if genius_result:
+        musician_result.append({"genius": genius_result})
 
     deezer_result = get_deezer_url(track_query_encoded, song_name)
     if deezer_result:

@@ -68,6 +68,10 @@ SPOTIFY_CLIENT_SECRET=
 # Get your client id and secret from https://developer.tidal.com
 TIDAL_CLIENT_ID=
 TIDAL_CLIENT_SECRET=
+# Get api key from https://developers.google.com/youtube
+YOUTUBE_API_KEY=
+# Get access token from https://genius.com/api-clients
+GENIUS_ACCESS_TOKEN=
 # Get your Astro Studio app token from https://studio.astro.build
 ASTRO_STUDIO_APP_TOKEN=
 ```
