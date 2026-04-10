@@ -13,14 +13,17 @@
     "build": "astro build --remote",
     "preview": "astro preview",
     "check": "astro check && tsc --noEmit",
+    "db:migrate": "bash -lc 'set -a; [ -f ../.env ] && . ../.env; set +a; turso db shell \"$TURSO_DATABASE_URL\" < db/migrations/001_create_share.sql'",
+    "db:seed": "bash -lc 'set -a; [ -f ../.env ] && . ../.env; set +a; turso db shell \"$TURSO_DATABASE_URL\" < db/migrations/002_seed_share_example.sql'",
+    "db:setup": "pnpm db:migrate && pnpm db:seed",
     "astro": "astro"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.3",
-    "@astrojs/db": "^0.14.1",
     "@astrojs/tailwind": "^5.1.0",
     "@astrojs/vercel": "^7.8.0",
     "@fontsource/geist-sans": "^5.1.0",
+    "@libsql/client": "^0.17.2",
     "astro": "^4.15.4",
     "tailwindcss": "^3.4.10",
     "typescript": "^5.5.4",

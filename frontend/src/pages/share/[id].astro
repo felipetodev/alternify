@@ -2,7 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import Socials from "@/components/Socials.astro";
 import { assets } from "@/lib/constants";
-import { db, eq, Share } from "astro:db";
+import { getShareById } from "../../../db/turso";
 import {
   validateShareRequest,
   validateTrackId
@@ -17,10 +17,7 @@ const track = validateTrackId(id)
 if (!track.success) return Astro.rewrite("/404")
 
 try {
-  const trackInfo = (await db
-    .select()
-    .from(Share)
-    .where(eq(Share.id, id!)))[0] ?? null;
+  const trackInfo = await getShareById(id!);
 
   if (trackInfo !== null) {
     // isDB = true;
@@ -58,9 +55,15 @@ const shareHref = `${Astro.url.origin}/share/${id}`
       <h1 class="text-4xl font-medium">Alternify - Share 🎵</h1>
     </a>
   </div>
-  <h2 class="animate-fade-in-up mt-6 text-sm opacity-70 text-center flex items-center">
-    Results for "<span class="font-semibold">{artist}</span>"
-  </h2>
+  <div class="grid text-sm opacity-70 text-center items-center">
+    <h2 class="animate-fade-in-up mt-6">
+      Results for:
+    </h2>
+    <div class="flex items-center space-x-2">
+      <img class="block size-12 rounded-xl" src={image} alt={artist} />
+      <span class="font-semibold">"{artist}"</span>
+    </div>
+  </div>
   <Socials
     title={artist!}
     href={shareHref}

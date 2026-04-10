@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { db, Share, NOW } from "astro:db";
+import { insertShare } from "../../../db/turso";
 import { validateShareRequest } from "@/lib/schemas";
 
 export const POST: APIRoute = async ({ request }) => {
@@ -14,12 +14,11 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   try {
-    await db.insert(Share).values({
-      id: id,
-      url: url,
-      image: image,
-      createdAt: NOW
-    }).onConflictDoNothing()
+    await insertShare({
+      id,
+      url,
+      image,
+    })
 
     return new Response('', { status: 200 })
   } catch (e) {

@@ -1,11 +1,7 @@
 ---
-import { Share, db, desc } from "astro:db";
+import { getLatestShares } from "../../db/turso";
 
-const tracks = await db
-  .select()
-  .from(Share)
-  .orderBy(desc(Share.createdAt))
-  .limit(10);
+const tracks = await getLatestShares(10);
 
 const getArtist = (url: string) => {
   return new URLSearchParams(url).get("artist");

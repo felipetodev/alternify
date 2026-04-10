@@ -12,7 +12,7 @@ https://github.com/user-attachments/assets/9a50901d-3e72-4977-a913-651c92c76fc2
 - [**Vercel**](https://vercel.com/) - Provides the developer tools and cloud infrastructure.
 - [**Flask**](https://flask.palletsprojects.com/) - A lightweight WSGI web application framework.
 - [**Spotify API**](https://developer.spotify.com/documentation/web-api/) - Web API that provides access to Spotify music catalog.
-- [**Astro DB**](https://astro.build/db/) - fully managed SQL database.
+- [**Turso (LibSQL)**](https://turso.tech/) - edge-hosted SQLite database.
 - [**svgl**](https://svgl.app/) - Beautiful library with SVG logos.
 
 ## 🚀 Quick start (Frontend)
@@ -33,6 +33,25 @@ npm install
 
 # Start the development server:
 npm run dev
+```
+
+### Database setup (Turso)
+
+Apply the SQL migration in [db/migrations/001_create_share.sql](frontend/db/migrations/001_create_share.sql) to your Turso database.
+
+If you use the Turso CLI:
+
+```bash
+turso db shell <your-db-name> < db/migrations/001_create_share.sql
+```
+
+Or use npm/pnpm scripts (recommended):
+
+```bash
+pnpm db:migrate
+pnpm db:seed
+# or both
+pnpm db:setup
 ```
 
 ## 🚀 Quick start (Backend)
@@ -72,8 +91,10 @@ TIDAL_CLIENT_SECRET=
 YOUTUBE_API_KEY=
 # Get access token from https://genius.com/api-clients
 GENIUS_ACCESS_TOKEN=
-# Get your Astro Studio app token from https://studio.astro.build
-ASTRO_STUDIO_APP_TOKEN=
+# Turso database URL (libsql://...)
+TURSO_DATABASE_URL=
+# Turso auth token (optional for local sqlite, required for hosted Turso)
+TURSO_AUTH_TOKEN=
 ```
 
 ## 🔑 License

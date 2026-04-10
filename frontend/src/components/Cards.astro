@@ -39,7 +39,7 @@
       .then((res): Promise<{ data: TrackLink[]; artist: string, image: string }> => res.json())
       .then((info) => {
         const { data, artist, image } = info;
-        addTrackInfo(artist);
+        addTrackInfo(artist, image);
         addHtmlNodes({ data, artist, image });
       })
       .catch((err) => {
@@ -49,7 +49,7 @@
         submit.innerHTML = "Get Alternatives";
       });
 
-    function addTrackInfo(query: string) {
+    function addTrackInfo(query: string, image: string) {
       const trackHeading = $("#track-heading");
       const results = $("#results")!;
       const socialsEl = $("#socials")!;
@@ -60,7 +60,16 @@
       results.classList.add("py-20");
 
       trackHeading.classList.add("mt-16", "animate-fade-in-up");
-      trackHeading.innerHTML = `<span class="opacity-70">Results for "<span class="font-semibold">${query}</span>"`;
+      trackHeading.innerHTML = `\
+        <div class="grid text-sm opacity-70 text-center items-center">
+          <h2 class="animate-fade-in-up mt-6">
+            Results for:
+          </h2>
+          <div class="flex items-center space-x-2">
+            <img class="block size-12 rounded-xl" src=${image} alt="${query}" />
+            <span class="font-semibold">"${query}"</span>
+          </div>
+        </div>`;
 
       // add share button clipboard
       const shareIcon = document.createElement("div");
